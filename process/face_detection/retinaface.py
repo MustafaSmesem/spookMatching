@@ -2,6 +2,7 @@ from __future__ import division
 import numpy as np
 import os.path as osp
 import cv2
+from ..utils import PickableInferenceSession
 
 
 def softmax(z):
@@ -79,6 +80,7 @@ class RetinaFace:
         self.use_kps = False
         self._anchor_ratio = 1.0
         self._num_anchors = 1
+
         if len(outputs) == 6:
             self.fmc = 3
             self._feat_stride_fpn = [8, 16, 32]
@@ -263,4 +265,5 @@ class RetinaFace:
 
 
 def get_retinaface(name):
-    return RetinaFace(name)
+    session = PickableInferenceSession(name)
+    return RetinaFace(name, session=session)
