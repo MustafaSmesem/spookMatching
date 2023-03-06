@@ -1,17 +1,6 @@
-"""
-As implemented in https://github.com/abewley/sort but with some modifications
-
-For each detected item, it computes the intersection over union (IOU) w.r.t. each tracked object. (IOU matrix)
-Then, it applies the Hungarian algorithm (via linear_assignment) to assign each det. item to the best possible
-tracked item (i.e. to the one with max. IOU).
-
-Note: a more recent approach uses a Deep Association Metric instead.
-see https://github.com/nwojke/deep_sort
-"""
-#!/usr/bin/env python -W ignore::DeprecationWarning
 import numpy as np
 from numba import jit
-from sklearn.utils.linear_assignment_ import linear_assignment
+from scipy.optimize import linear_sum_assignment as linear_assignment
 import warnings
 
 warnings.filterwarnings("ignore", category=DeprecationWarning) 
@@ -49,6 +38,8 @@ def associate_detections_to_trackers(detections, trackers, iou_threshold=0.25):
     '''The linear assignment module tries to minimise the total assignment cost.
     In our case we pass -iou_matrix as we want to maximise the total IOU between track predictions and the frame detection.'''
     matched_indices = linear_assignment(-iou_matrix)
+    matched_indices = np.asarray(matched_indices)
+    matched_indices = np.transpose(matched_indices)
 
     unmatched_detections = []
     for d, det in enumerate(detections):

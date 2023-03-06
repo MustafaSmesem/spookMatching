@@ -15,9 +15,6 @@ class KalmanBoxTracker(object):
     count = 0
 
     def __init__(self, bbox):
-        """
-        Initialises a tracker using initial bounding box.
-        """
         # define constant velocity model
         self.kf = KalmanFilter(dim_x=7, dim_z=4)
         self.kf.F = np.array(
@@ -38,7 +35,6 @@ class KalmanBoxTracker(object):
         self.id = KalmanBoxTracker.count
         KalmanBoxTracker.count += 1
 
-
         self.history = []
         self.hits = 0
         self.hit_streak = 0
@@ -48,6 +44,11 @@ class KalmanBoxTracker(object):
 
         # addtional fields
         self.face_addtional_attribute = []
+        self.face = None
+        self.is_recognized = False
+        self.is_deleted = False
+        self.is_sent = False
+        self.recognition_results = []
 
     def update(self, bbox):
         """

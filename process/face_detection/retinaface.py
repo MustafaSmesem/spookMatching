@@ -178,7 +178,7 @@ class RetinaFace:
                 kpss_list.append(pos_kpss)
         return scores_list, bboxes_list, kpss_list
 
-    def detect(self, img, input_size=None, max_num=0, metric='default'):
+    def detect(self, img, input_size=None):
         assert input_size is not None or self.input_size is not None
         input_size = self.input_size if input_size is None else input_size
 
@@ -212,25 +212,17 @@ class RetinaFace:
             kpss = kpss[keep, :, :]
         else:
             kpss = None
-        if max_num > 0 and det.shape[0] > max_num:
-            area = (det[:, 2] - det[:, 0]) * (det[:, 3] -
-                                              det[:, 1])
-            img_center = img.shape[0] // 2, img.shape[1] // 2
-            offsets = np.vstack([
-                (det[:, 0] + det[:, 2]) / 2 - img_center[1],
-                (det[:, 1] + det[:, 3]) / 2 - img_center[0]
-            ])
-            offset_dist_squared = np.sum(np.power(offsets, 2.0), 0)
-            if metric == 'max':
-                values = area
-            else:
-                values = area - offset_dist_squared * 2.0  # some extra weight on the centering
-            bindex = np.argsort(
-                values)[::-1]  # some extra weight on the centering
-            bindex = bindex[0:max_num]
-            det = det[bindex, :]
-            if kpss is not None:
-                kpss = kpss[bindex, :]
+
+        return det, kpss
+
+    def autodetect(self, img):
+        bboxes, kpss = self.detect(img, input_size=(640, 640))
+        bboxes2, kpss2 = self.detect(img, input_size=(128, 128))
+        bboxes_all = np.concatenate([bboxes, bboxes2], axis=0)
+        kpss_all = np.concatenate([kpss, kpss2], axis=0)
+        keep = self.nms(bboxes_all)
+        det = bboxes_all[keep, :]
+        kpss = kpss_all[keep, :]
         return det, kpss
 
     def nms(self, dets):
