@@ -18,7 +18,7 @@ if __name__ == '__main__':
     }
 
     streamer = StreamProcessor(config)
-    # streamer.run()
+    streamer.run()
     face_detector = FaceDetector(os.path.join(config['models_dir'], config['det_model_file']), config['det_size'])
     face_encoder = FaceEncoder(os.path.join(config['models_dir'], config['arcface_model_path']))
 

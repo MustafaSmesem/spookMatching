@@ -12,3 +12,10 @@ class ImageAnalyzer:
         self.age_gender_detector = AgeGenderDetector(os.path.join(models_dir, config['age_gender_model_path']))
         self.drawer = Drawer(draw_det_score=True)
         self.face_margin = config['face_margin']
+
+    def analyze_image(self, img):
+        boxes, kps = self.face_detector.auto_detect(img)
+        faces = result_to_faces(boxes, kps)
+        for face in faces:
+            encodings = self.face_encoder.encode(img, face)
+            print(encodings)

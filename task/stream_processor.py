@@ -95,12 +95,12 @@ class StreamProcessor:
 
                 if trk.is_deleted:
                     print('trk deleted')
-                # face = trk.face
+                face = trk.face
                 # self.face_encoder.encode(frame, face)
-                # self.landmark_detector.detect(frame, face)
+                self.landmark_detector.detect(frame, face)
                 # self.age_gender_detector.detect(frame, face)
-                # self.drawer.init(face, frame)
-                # self.drawer.draw_full_landmark_mask(trk_color, trk_color * 0.7)
+                self.drawer.init(face, frame)
+                self.drawer.draw_full_landmark_mask(trk_color, trk_color * 0.7)
 
             # print(f'detection [%d]: %.3f sn' % (frame_number, time.time() - start))
             cv2.putText(frame, str(frame_number), (25, 40), cv2.FONT_HERSHEY_COMPLEX, 0.7,
