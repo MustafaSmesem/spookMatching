@@ -19,4 +19,4 @@ class FaceDetector:
         return self.model.detect(frame, self.det_size)
 
     def auto_detect(self, frame):
-        return self.model.autodetect(frame, self.det_size)
+        return self.model.autodetect(frame)

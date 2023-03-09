@@ -2,6 +2,7 @@ from task.stream_processor import StreamProcessor
 import os
 from process import FaceDetector, Face, Drawer, FaceEncoder
 import cv2
+from album.bulk_album_creator import BulkAlbumCreator
 
 if __name__ == '__main__':
     ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,21 +18,31 @@ if __name__ == '__main__':
         'face_margin': 35
     }
 
-    streamer = StreamProcessor(config)
-    streamer.run()
-    face_detector = FaceDetector(os.path.join(config['models_dir'], config['det_model_file']), config['det_size'])
-    face_encoder = FaceEncoder(os.path.join(config['models_dir'], config['arcface_model_path']))
+    # streamer = StreamProcessor(config)
+    # streamer.run()
+    # face_detector = FaceDetector(os.path.join(config['models_dir'], config['det_model_file']), config['det_size'])
+    # face_encoder = FaceEncoder(os.path.join(config['models_dir'], config['arcface_model_path']))
+    #
+    # img1 = cv2.imread(os.path.join(ROOT_DIR, 'static/test_imgs/img_001.jpeg'))
+    # img2 = cv2.imread(os.path.join(ROOT_DIR, 'static/test_imgs/img_002.jpeg'))
+    # boxes1, kpss1 = face_detector.auto_detect(img1)
+    # boxes2, kpss2 = face_detector.auto_detect(img2)
+    #
+    # face1 = Face(bbox=boxes1[0][0:4], kps=kpss1[0], det_score=boxes1[0][4])
+    # face2 = Face(bbox=boxes2[0][0:4], kps=kpss2[0], det_score=boxes2[0][4])
+    #
+    # f1 = face_encoder.encode(img1, face1)
+    # f2 = face_encoder.encode(img2, face2)
 
-    img1 = cv2.imread(os.path.join(ROOT_DIR, 'static/test_imgs/img_001.jpeg'))
-    img2 = cv2.imread(os.path.join(ROOT_DIR, 'static/test_imgs/img_002.jpeg'))
-    boxes1, kpss1 = face_detector.auto_detect(img1)
-    boxes2, kpss2 = face_detector.auto_detect(img2)
+    # sim = face_encoder.find_similarity(f1, f2)
+    # print(sim)
 
-    face1 = Face(bbox=boxes1[0][0:4], kps=kpss1[0], det_score=boxes1[0][4])
-    face2 = Face(bbox=boxes2[0][0:4], kps=kpss2[0], det_score=boxes2[0][4])
+    album_creator = BulkAlbumCreator("/Users/arpanet_mustafa/input/test.txt",
+                                     "/Users/arpanet_mustafa/output/test/mustafa", config)
 
-    f1 = face_encoder.encode(img1, face1)
-    f2 = face_encoder.encode(img2, face2)
-
-    sim = face_encoder.find_similarity(f1, f2)
-    print(sim)
+    file = open('/Users/arpanet_mustafa/output/test/mustafa/test.txt', 'r')
+    lines = file.readlines()
+    i = 0
+    for line in lines:
+        i += 1
+        print(f'{i} -> {line}')
